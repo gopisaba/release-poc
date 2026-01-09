@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - beta
+      - main
+
+jobs:
+  release:
+    name: Release
+    runs-on:
+      - self-hosted
+      - build
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Semantic Release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
+        with:
+          extra_plugins: |
+            @semantic-release/git
+            @semantic-release/exec
+            conventional-changelog-conventionalcommits
+            @kilianpaquier/semantic-release-backmerge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

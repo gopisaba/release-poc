@@ -1,0 +1,30 @@
+branches:
+  - name: main
+  - name: beta
+    prerelease: true
+
+plugins:
+  -
+    - "@semantic-release/commit-analyzer"
+    - preset: conventionalcommits
+  -
+    - "@semantic-release/release-notes-generator"
+    - preset: conventionalcommits
+  - "@semantic-release/github"
+  -
+    - "@semantic-release/exec"
+    - prepareCmd: >
+        yq e -i '.version = "${nextRelease.version}"' file.yaml
+  -
+    - "@semantic-release/git"
+    - assets:
+        - file.yaml
+      message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+  -
+    - "@kilianpaquier/semantic-release-backmerge"
+    - platform: github
+      targets:
+        - from: main
+          to: beta
+      title: "chore: backmerge main into beta [skip ci]"
+      baseUrl: "https://github.com/sainsburys-tech/mario-data-pipelines-parent"
