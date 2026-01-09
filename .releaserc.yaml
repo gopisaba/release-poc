@@ -22,9 +22,7 @@ plugins:
       message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
   -
     - "@kilianpaquier/semantic-release-backmerge"
-    - platform: github
-      targets:
+    - targets:
         - from: main
           to: beta
       title: "chore: backmerge main into beta [skip ci]"
-      baseUrl: "https://github.com/sainsburys-tech/mario-data-pipelines-parent"
